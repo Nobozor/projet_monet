@@ -5,9 +5,14 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/types.h>
+#include <unistd.h>
+#include <arpa/inet.h>
+#include <sys/ioctl.h>
  
 int main()
 {
+    
     //structure donnant les informations sur le serveur et sur le client
     struct sockaddr_in information_server;
     struct sockaddr_in information_client;
@@ -32,6 +37,9 @@ int main()
     memset(&information_server, 0, sizeof(struct sockaddr_in));
     information_server.sin_port = htons(2500);
     information_server.sin_family = AF_INET;
+    int opt = 1;
+    int fd;
+    ioctl(fd, FIONBIO, &opt);
  
     /* création de la connexion*/
     if ((bind(socketID, (struct sockaddr *) &information_server, sizeof(struct sockaddr))) == -1)

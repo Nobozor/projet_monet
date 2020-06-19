@@ -4,10 +4,14 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <string.h>
-#include<sys/types.h>
+#include <sys/types.h>
+#include <unistd.h>
+#include <arpa/inet.h>
+#include <sys/ioctl.h>
+
 int main()
 {
- 
+
     pid_t pid;
     int id;
     char msg[255];//variable qui contiendrat les messages
@@ -20,7 +24,9 @@ int main()
     informations.sin_addr.s_addr = inet_addr("127.0.0.1");
  
     int socketID = socket(AF_INET, SOCK_STREAM, 0); // creation du socket propre au client
- 
+    int opt = 1;
+    int fd;
+    ioctl(fd, FIONBIO, &opt);
     if (socketID == -1)    //test de création du socket
     {
         perror("socket");
@@ -32,27 +38,32 @@ int main()
         perror("connect");
         exit (-1);
     }
- 
-    if (strcmp(msg, "aurevoir") != 0)
-    {
         memset(msg, 0, 255);
         recv(socketID, msg, 255, 0);
         printf ("%s\n", msg);
-    }
- 
+        memset(msg, 0, 255);
+    
     do 
     {
         id+=1;
         printf ("moi : ");
         fgets(msg, 255, stdin);// le client ecrit son message
         msg[strlen(msg) - 1] = '\0';
-        send(socketID, msg, strlen(msg)+1,0);
-    
+        send(socketID, msg, strlen(msg),0);
+        memset(msg, 0, 255);
+
+        if (strcmp(msg, "bonjour") == 0);
+    {
+        recv(socketID, msg, 255, 0);
+        printf ("%s\n", msg);
+        memset(msg, 0, 255);
+    }
+ 
         /*if ((send(socketID, msg, strlen(msg), 0)) == -1)
             perror("send");
         recv(socketID, msg, 255, 0);
        printf ("Phrase reçue : %s\n", msg);*/
-}
+    }
     while (strcmp(msg, "aurevoir") != 0); // tant que le client n'envoie pas "aurevoir" la conversation n'est pas fini
  
     shutdown(socketID, SHUT_RDWR);// fermeture du socket
