@@ -47,12 +47,13 @@ int main()
     {
         id+=1;
         printf ("moi : ");
+        memset(msg, 0, 255);
         fgets(msg, 255, stdin);// le client ecrit son message
         msg[strlen(msg) - 1] = '\0';
-        send(socketID, msg, strlen(msg)+1,0);
-        memset(msg, 0, 255);
+        send(socketID, msg, strlen(msg),0);
+        
 
-        if (strcmp(msg, "bonjour") == 0);
+        if (strcmp(msg, "bonjour") == 0)
     {
         recv(socketID, msg, 255, 0);
         printf ("%s\n", msg);
