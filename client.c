@@ -49,7 +49,7 @@ int main()
         printf ("moi : ");
         fgets(msg, 255, stdin);// le client ecrit son message
         msg[strlen(msg) - 1] = '\0';
-        send(socketID, msg, strlen(msg),0);
+        send(socketID, msg, strlen(msg)+1,0);
         memset(msg, 0, 255);
 
         if (strcmp(msg, "bonjour") == 0);
