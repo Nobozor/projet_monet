@@ -9,6 +9,7 @@
 #include <arpa/inet.h>
 #include <sys/ioctl.h>
 
+
 int main()
 {
 
@@ -47,7 +48,7 @@ int main()
     {
         id+=1;
         printf ("moi : ");
-        memset(msg, 0, 255);
+        memset(msg, 0, 255); // reset la variable msg a 0
         fgets(msg, 255, stdin);// le client ecrit son message
         msg[strlen(msg) - 1] = '\0';
         send(socketID, msg, strlen(msg),0);

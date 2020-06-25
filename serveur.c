@@ -9,6 +9,7 @@
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <sys/ioctl.h>
+#include <fcntl.h> 
  
 int main()
 {
@@ -23,8 +24,12 @@ int main()
     int id;
     char msg[255];
     char buffer[30]="coucou";
- 
+    int tailletableau=10;
+    int tabclient[tailletableau];
     id=0;
+
+ 
+    
     socklen_t len = sizeof(struct sockaddr_in); //déclaration d' une variable du type socklen_t qui contiendra la taille de la structure
  
     if (socketID == -1)
@@ -56,14 +61,18 @@ int main()
     {
  
         memset(&information_client, 0, sizeof(struct sockaddr_in));
-        connexion = accept(socketID, (struct sockaddr *) &information_client, &len); //le serveur accepte la connexion
- 
+        int connexion = accept(socketID, (struct sockaddr *) &information_client, &len); //le serveur accepte la connexion
+        
+
         if (connexion == -1)
         {
             perror("accept");
             exit(-1);
         }
         id+=1;
+        tabclient[tailletableau]=connexion;
+        
+    
         /* Create child process */
         pid = fork();
  
@@ -85,8 +94,9 @@ int main()
                 
                  if (strcmp(msg, "bonjour") == 0)
                 {
-
-                    send(connexion, buffer, 30, 0);
+                   for (int i=0;i<id;i++) {
+                    send(tabclient[tailletableau], buffer, 30, 0);
+                }
 
                 }
 
